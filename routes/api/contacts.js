@@ -12,13 +12,7 @@ const contactsSchema = Joi.object({
 router.get("/", async (req, res, next) => {
   try {
     const contacts = await contactsOperation.listContacts();
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result: contacts,
-      },
-    });
+    res.json(contacts);
   } catch (error) {
     next(error);
   }
@@ -29,19 +23,11 @@ router.get("/:contactId", async (req, res, next) => {
     const { contactId } = req.params;
     const result = await contactsOperation.getContactById(contactId);
     if (!result) {
-      res.json({
-        status: "error",
-        code: 404,
+      res.status(404).json({
         message: "Not found",
       });
     }
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -52,16 +38,13 @@ router.post("/", async (req, res, next) => {
     const { error } = contactsSchema.validate(req.body);
     if (error) {
       error.status = 400;
+      res.status(400).json({
+        message: error.message,
+      });
       throw error;
     }
     const result = await contactsOperation.addContact(req.body);
-    res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        result,
-      },
-    });
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }
@@ -72,19 +55,12 @@ router.delete("/:contactId", async (req, res, next) => {
     const { contactId } = req.params;
     const result = await contactsOperation.removeContact(contactId);
     if (!result) {
-      res.json({
-        status: "error",
-        code: 404,
+      res.status(404).json({
         message: "Not found",
       });
     }
     res.json({
-      status: "success",
-      code: 200,
-      data: {
-        message: "contact deleted",
-        result,
-      },
+      message: "contact deleted",
     });
   } catch (error) {
     next(error);
@@ -96,24 +72,19 @@ router.put("/:contactId", async (req, res, next) => {
     const { error } = contactsSchema.validate(req.body);
     if (error) {
       error.status = 400;
+      res.status(404).json({
+        message: "Not found",
+      });
       throw error;
     }
     const { contactId } = req.params;
     const result = await contactsOperation.updateContact(contactId, req.body);
     if (!result) {
-      res.json({
-        status: "error",
-        code: 404,
-        message: "Not found",
+      res.status(400).json({
+        message: "Body must have at least one field",
       });
     }
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
+    res.json(result);
   } catch (error) {
     next(error);
   }
