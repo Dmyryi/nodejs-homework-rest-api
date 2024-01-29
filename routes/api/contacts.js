@@ -18,10 +18,10 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:contactId", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
-    const { contactId } = req.params;
-    const result = await contactsOperation.getContactById(contactId);
+    const { id } = req.params;
+    const result = await contactsOperation.getContactById(id);
     if (!result) {
       res.status(404).json({
         message: "Not found",
@@ -50,10 +50,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.delete("/:contactId", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const { contactId } = req.params;
-    const result = await contactsOperation.removeContact(contactId);
+    const { id } = req.params;
+    const result = await contactsOperation.removeContact(id);
     if (!result) {
       res.status(404).json({
         message: "Not found",
@@ -67,8 +67,13 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.put("/:contactId", async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
+    if (!req.body) {
+      res.status(404).json({
+        message: "Not found",
+      });
+    }
     const { error } = contactsSchema.validate(req.body);
     if (error) {
       error.status = 400;
@@ -77,13 +82,9 @@ router.put("/:contactId", async (req, res, next) => {
       });
       throw error;
     }
-    const { contactId } = req.params;
-    const result = await contactsOperation.updateContact(contactId, req.body);
-    if (!result) {
-      res.status(404).json({
-        message: "Not found",
-      });
-    }
+    const { id } = req.params;
+    const result = await contactsOperation.updateContact(id, req.body);
+
     res.json(result);
   } catch (error) {
     next(error);
