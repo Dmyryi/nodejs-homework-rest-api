@@ -69,21 +69,29 @@ router.delete("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    if (!req.body) {
-      res.status(404).json({
-        message: "Not found",
-      });
-    }
-    const { error } = contactsSchema.validate(req.body);
-    if (error) {
-      error.status = 400;
+    if (Object.keys(req.body).length === 0) {
       res.status(400).json({
         message: "Body must have at least one field",
       });
-      throw error;
+      return;
     }
+    const { error } = contactsSchema.validate(req.body);
+    if (error) {
+      res.status(400).json({
+        message: error.message,
+      });
+      return;
+    }
+
     const { id } = req.params;
     const result = await contactsOperation.updateContact(id, req.body);
+
+    if (!result) {
+      res.status(404).json({
+        message: "Not found",
+      });
+      return;
+    }
 
     res.json(result);
   } catch (error) {
