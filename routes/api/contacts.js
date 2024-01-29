@@ -72,16 +72,16 @@ router.put("/:contactId", async (req, res, next) => {
     const { error } = contactsSchema.validate(req.body);
     if (error) {
       error.status = 400;
-      res.status(404).json({
-        message: "Not found",
+      res.status(400).json({
+        message: "Body must have at least one field",
       });
       throw error;
     }
     const { contactId } = req.params;
     const result = await contactsOperation.updateContact(contactId, req.body);
     if (!result) {
-      res.status(400).json({
-        message: "Body must have at least one field",
+      res.status(404).json({
+        message: "Not found",
       });
     }
     res.json(result);
