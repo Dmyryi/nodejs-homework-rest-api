@@ -1,14 +1,11 @@
 const express = require("express");
-
+const {
+  updateContactsSchema,
+  createContactsSchema,
+} = require("../../schemas/contactsSchemas");
 const router = express.Router();
 const contactsOperation = require("../../models/contacts");
-const Joi = require("joi");
 
-const contactsSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.number().required(),
-});
 router.get("/", async (req, res, next) => {
   try {
     const contacts = await contactsOperation.listContacts();
@@ -35,7 +32,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { error } = contactsSchema.validate(req.body);
+    const { error } = createContactsSchema.validate(req.body);
     if (error) {
       error.status = 400;
       res.status(400).json({
@@ -75,7 +72,7 @@ router.put("/:id", async (req, res, next) => {
       });
       return;
     }
-    const { error } = contactsSchema.validate(req.body);
+    const { error } = updateContactsSchema.validate(req.body);
     if (error) {
       res.status(400).json({
         message: error.message,
