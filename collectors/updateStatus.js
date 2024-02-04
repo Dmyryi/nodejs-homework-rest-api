@@ -1,6 +1,6 @@
 const { favoriteContactsSchema } = require("../schemas/contactsSchemas");
 const { Contact } = require("../models/contact");
-const updateStatusContacts = async (req, res) => {
+const updateStatusContacts = async (req, res, next) => {
   try {
     const { error } = favoriteContactsSchema.validate(req.body);
     if (error) {

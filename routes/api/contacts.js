@@ -8,17 +8,18 @@ const {
   updateOne,
   updateStatus,
 } = require("../../collectors");
+const isValidId = require("../../middlewars/isValid");
 
 router.get("/", getAll);
 
-router.get("/:id", getById);
+router.get("/:id", isValidId, getById);
 
 router.post("/", addOne);
 
-router.delete("/:id", deleteOne);
+router.delete("/:id", isValidId, deleteOne);
 
-router.put("/:id", updateOne);
+router.put("/:id", isValidId, updateOne);
 
-router.patch("/:id/favorite", updateStatus);
+router.patch("/:id/favorite", isValidId, updateStatus);
 
 module.exports = router;
