@@ -9,12 +9,13 @@ const {
   updateStatus,
 } = require("../../collectors");
 const isValidId = require("../../middlewars/isValid");
+const { auth } = require("../../middlewars/auth");
 
-router.get("/", getAll);
+router.get("/", auth, getAll);
 
 router.get("/:id", isValidId, getById);
 
-router.post("/", addOne);
+router.post("/", auth, addOne);
 
 router.delete("/:id", isValidId, deleteOne);
 

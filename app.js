@@ -2,7 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
-
+const authRouter = require("./routes/api/auth");
 const contactsRouter = require("./routes/api/contacts");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -32,10 +32,11 @@ const connectToDatabase = async () => {
   }
 };
 connectToDatabase();
-
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+
+app.use("/users/", authRouter);
 
 app.use("/api/contacts", contactsRouter);
 
