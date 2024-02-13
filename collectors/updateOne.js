@@ -17,7 +17,18 @@ const updateOne = async (req, res, next) => {
     }
 
     const { id } = req.params;
-    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+    const { _id } = req.user;
+    const result = await Contact.findByIdAndUpdate(
+      { _id: id, owner: _id },
+      req.body,
+      { new: true }
+    ).populate("owner", "_id email");
+
+    if (result.owner._id.toString() !== _id.toString()) {
+      return res.status(403).json({
+        message: "You are not authorized to access this contact",
+      });
+    }
 
     if (!result) {
       res.status(404).json({

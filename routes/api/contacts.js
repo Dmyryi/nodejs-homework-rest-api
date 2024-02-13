@@ -13,14 +13,14 @@ const { auth } = require("../../middlewars/auth");
 
 router.get("/", auth, getAll);
 
-router.get("/:id", isValidId, getById);
+router.get("/:id", auth, isValidId, getById);
 
 router.post("/", auth, addOne);
 
-router.delete("/:id", isValidId, deleteOne);
+router.delete("/:id", auth, isValidId, deleteOne);
 
-router.put("/:id", isValidId, updateOne);
+router.put("/:id", auth, isValidId, updateOne);
 
-router.patch("/:id/favorite", isValidId, updateStatus);
+router.patch("/:id/favorite", auth, isValidId, updateStatus);
 
 module.exports = router;

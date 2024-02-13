@@ -3,7 +3,17 @@ const { Contact } = require("../models/contact");
 const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findById(id);
+    const { _id } = req.user;
+    const result = await Contact.findById({ _id: id, owner: _id }).populate(
+      "owner",
+      "_id email"
+    );
+
+    if (result.owner._id.toString() !== _id.toString()) {
+      return res.status(403).json({
+        message: "You are not authorized to access this contact",
+      });
+    }
 
     if (!result) {
       res.status(404).json({
