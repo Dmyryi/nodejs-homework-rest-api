@@ -4,7 +4,7 @@ const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { _id } = req.user;
-    const result = await Contact.findById({ _id: id, owner: _id }).populate(
+    const result = await Contact.findOne({ _id: id, owner: _id }).populate(
       "owner",
       "_id email"
     );

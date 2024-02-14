@@ -18,7 +18,7 @@ const updateOne = async (req, res, next) => {
 
     const { id } = req.params;
     const { _id } = req.user;
-    const result = await Contact.findByIdAndUpdate(
+    const result = await Contact.findOneAndUpdate(
       { _id: id, owner: _id },
       req.body,
       { new: true }

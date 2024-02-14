@@ -4,7 +4,7 @@ const deleteOne = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { _id } = req.user;
-    const result = await Contact.findByIdAndDelete({
+    const result = await Contact.findOneAndDelete({
       _id: id,
       owner: _id,
     }).populate("owner", "_id email");
