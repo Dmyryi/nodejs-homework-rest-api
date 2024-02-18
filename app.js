@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const authRouter = require("./routes/api/auth");
 const contactsRouter = require("./routes/api/contacts");
 const dotenv = require("dotenv");
+const multer = require("multer");
+
 dotenv.config();
 
 const { DB_HOST } = process.env;
@@ -32,9 +34,17 @@ const connectToDatabase = async () => {
   }
 };
 connectToDatabase();
+
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
+
+const avatars = [];
+
+// app.post("/avatars/", upload.single("avatar"), async (req, res) => {
+//
+// });
 
 app.use("/users/", authRouter);
 
