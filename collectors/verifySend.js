@@ -1,8 +1,8 @@
-const verifySchema = require("../schemas/verifySchemas");
+const { verifySchema } = require("../schemas/verifySchemas");
 const { User } = require("../models/user");
-const sendEmail = require("../helpers/sendEmail");
+const { sendEmail } = require("../helpers/sendEmail");
 
-const verifySend = async (res, req) => {
+const verifySend = async (req, res) => {
   const { error } = verifySchema.validate(req.body);
   if (error) {
     error.status = 400;
@@ -11,8 +11,8 @@ const verifySend = async (res, req) => {
     });
     throw error;
   }
-  const { email } = req.body;
-  const user = await User.findOne({});
+
+  const user = await User.findOne(req.body);
   if (!user) {
     res.status(404).json({
       message: "Not found",
@@ -24,7 +24,7 @@ const verifySend = async (res, req) => {
     });
   }
   const mail = {
-    to: email,
+    to: req.body,
     subject: "Підтвердження реєстрації",
     html: "<a href=`http://localhost:3000/users/verify/${user.verificationToken}` target=`_blank`>Нажміть для підтвердження</a>",
   };
