@@ -42,10 +42,6 @@ app.use(express.static("public"));
 
 const avatars = [];
 
-// app.post("/avatars/", upload.single("avatar"), async (req, res) => {
-//
-// });
-
 app.use("/users/", authRouter);
 
 app.use("/api/contacts", contactsRouter);
