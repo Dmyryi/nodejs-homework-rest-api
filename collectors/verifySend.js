@@ -10,7 +10,7 @@ const verifySend = async (req, res, next) => {
       res.status(400).json({
         message: error.message,
       });
-      throw error;
+      return;
     }
 
     const user = await User.findOne(req.body);
@@ -18,11 +18,13 @@ const verifySend = async (req, res, next) => {
       res.status(404).json({
         message: "Not found",
       });
+      return;
     }
     if (user.verify) {
       res.status(400).json({
         message: "User already verify",
       });
+      return;
     }
     const mail = {
       to: req.body,
